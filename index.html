@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>abbas.rvan2</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اپلیکیشن روان‌خوانی</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- فایل‌های صوتی -->
+  <audio id="click-sound" src="sounds/sund2.mp3"></audio>
+  <audio id="button-click-sound" src="sounds/sund1.mp3"></audio>
+  <audio id="background-music" src="sounds/paszamin.mp3" loop></audio>
+  <audio id="calm-music" src="sounds/aram.mp3" loop></audio>
+
+  <!-- صفحه ورود -->
+  <div id="login-screen">
+    <h1>abbas.rvan</h1>
+    <h2>ورود به سیستم</h2>
+    <input type="text" id="username" placeholder="نام کاربری">
+    <input type="password" id="password" placeholder="رمز عبور">
+    <button onclick="login()">ورود</button>
+    <p id="error-message" style="color: red; display: none;">نام کاربری یا رمز عبور اشتباه است!</p>
+  </div>
+
+  <!-- منوی اصلی -->
+  <div id="main-menu" style="display: none;">
+    <h2>منوی اصلی</h2>
+    <button id="reading-btn" onclick="showReadingMenu()">روان‌خوانی</button>
+    <button id="add-sentence-btn" onclick="showAddSentenceMenu()">وارد کردن جمله جدید</button>
+    <button id="logout-btn" onclick="logout()">خروج از سیستم</button>
+  </div>
+
+  <!-- منوی روان‌خوانی -->
+  <div id="reading-menu" style="display: none;">
+    <h2>روان‌خوانی</h2>
+    <div id="sentence-box">
+      <p id="sentence"></p>
+    </div>
+    <button onclick="startReading()">شروع</button>
+    <button onclick="stopReading()">توقف</button>
+    <button onclick="nextSentence()">جمله بعدی</button>
+    <div id="speed-control">
+      <label for="speed">سرعت حرکت جمله:</label>
+      <input type="range" id="speed" min="1" max="10" value="2" onchange="updateSpeed()">
+    </div>
+    <button onclick="backToMainMenu()">بازگشت به منو</button>
+  </div>
+
+  <!-- منوی وارد کردن جمله جدید -->
+  <div id="add-sentence-menu" style="display: none;">
+    <h2>وارد کردن جمله جدید</h2>
+    <input type="text" id="new-sentence" placeholder="جمله جدید را وارد کنید">
+    <button onclick="addSentence()">اضافه کردن جمله</button>
+    <button onclick="backToMainMenu()">بازگشت به منو</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+<!-- partial -->
+  <script  src="./script.js"></script>
+
+</body>
+</html>
