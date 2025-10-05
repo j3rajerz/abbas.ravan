@@ -1,20 +1,456 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>abbas.rvan2</title>
-  <link rel="stylesheet" href="./style.css">
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>اپلیکیشن روان‌خوانی</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* استایل‌های کلی */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      direction: rtl;
+      height: 100vh;
+      overflow: hidden;
+      perspective: 1000px;
+    }
+
+    /* صفحه ورود */
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+      transition: all 0.5s ease;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transform-style: preserve-3d;
+      transform: translateZ(20px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 10; /* ensure login container is above the floating background */
+    }
+
+    .login-container h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(106, 17, 203, 0.7);
+    }
+
+    .login-container h2 {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      color: #e0e0e0;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      caret-color: white; /* ensure caret is visible while typing */
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .input-group input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(106, 17, 203, 0.5);
+    }
+
+    .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .btn {
+      padding: 15px 30px;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      margin: 10px 0;
+      width: 100%;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .btn:hover::after {
+      transform: translateX(100%);
+    }
+
+    #error-message {
+      color: #ff6b6b;
+      margin-top: 15px;
+      display: none;
+      font-weight: bold;
+    }
+
+    /* منوی اصلی */
+    #main-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-menu-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      transform-style: preserve-3d;
+      transform: translateZ(20px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 10;
+    }
+
+    .main-menu-container h2 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(106, 17, 203, 0.7);
+    }
+
+    .menu-btn {
+      width: 100%;
+      margin: 15px 0;
+      padding: 18px;
+      font-size: 1.2rem;
+    }
+
+    /* منوی روان‌خوانی */
+    #reading-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .reading-container {
+      width: 100%;
+      max-width: 1200px; /* larger container so sentence box can be wide */
+      margin: 0 auto; /* center the container */
+      text-align: center;
+      z-index: 10;
+    }
+
+    .reading-container h2 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(106, 17, 203, 0.7);
+    }
+
+    #sentence-box {
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+  height: 160px; /* slightly taller for better visual */
+  width: 100%; /* use container width so it centers correctly */
+  max-width: 1100px; /* limit how wide the box can get */
+  margin: 40px auto; /* center the box within the container */
+      display: flex;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #sentence-container {
+      position: relative;
+      width: 100%;
+      height: 60px;
+      overflow: hidden;
+    }
+
+    #sentence {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 2rem;
+      left: 100%;
+      color: white;
+      font-weight: bold;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      transition: left 0.1s linear;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+    }
+
+    #leading-emoji {
+      left: 0;
+    }
+
+    #trailing-emoji {
+      right: 0;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    .control-btn {
+      padding: 15px 25px;
+      font-size: 1.1rem;
+      width: auto;
+      min-width: 150px;
+    }
+
+    #speed-control {
+      margin: 20px 0;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #speed-control label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #ff6b6b;
+      font-weight: bold;
+    }
+
+    #speed {
+      width: 100%;
+      height: 10px;
+      -webkit-appearance: none;
+      appearance: none; /* standard property for compatibility */
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      outline: none;
+    }
+
+    #speed::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #6a11cb;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(106, 17, 203, 0.7);
+    }
+
+    /* منوی وارد کردن جمله جدید */
+    #add-sentence-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .add-sentence-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      transform-style: preserve-3d;
+      transform: translateZ(20px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 10;
+    }
+
+    .add-sentence-container h2 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(106, 17, 203, 0.7);
+    }
+
+    #new-sentence {
+      width: 100%;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 15px;
+      color: white;
+      font-size: 1.2rem;
+      outline: none;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #new-sentence:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(106, 17, 203, 0.5);
+    }
+
+    #new-sentence::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* افکت‌های پس‌زمینه */
+    .floating-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none; /* allow clicks to pass through to inputs/buttons */
+    }
+
+    .floating-item {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* انیمیشن‌های ویژه */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* رسپانسیو */
+    @media (max-width: 768px) {
+      .login-container, .main-menu-container, .add-sentence-container {
+        width: 95%;
+        padding: 30px 20px;
+      }
+      
+      .reading-container {
+        width: 95%;
+      }
+      
+      #sentence {
+        font-size: 1.5rem;
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .control-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- فایل‌های صوتی -->
@@ -25,51 +461,689 @@
 
   <!-- صفحه ورود -->
   <div id="login-screen">
-    <h1>abbas.rvan</h1>
-    <h2>ورود به سیستم</h2>
-    <input type="text" id="username" placeholder="نام کاربری">
-    <input type="password" id="password" placeholder="رمز عبور">
-    <button onclick="login()">ورود</button>
-    <p id="error-message" style="color: red; display: none;">نام کاربری یا رمز عبور اشتباه است!</p>
+    <div class="floating-bg" id="login-bg"></div>
+    <div class="login-container fade-in">
+      <h1>abbas.rvan</h1>
+      <h2>ورود به سیستم</h2>
+      <div class="input-group">
+        <input type="text" id="username" placeholder="نام کاربری">
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="رمز عبور">
+      </div>
+      <button class="btn" onclick="login()">ورود</button>
+      <p id="error-message">نام کاربری یا رمز عبور اشتباه است!</p>
+    </div>
   </div>
 
   <!-- منوی اصلی -->
-  <div id="main-menu" style="display: none;">
-    <h2>منوی اصلی</h2>
-    <button id="reading-btn" onclick="showReadingMenu()">روان‌خوانی</button>
-    <button id="add-sentence-btn" onclick="showAddSentenceMenu()">وارد کردن جمله جدید</button>
-    <button id="logout-btn" onclick="logout()">خروج از سیستم</button>
+  <div id="main-menu">
+    <div class="floating-bg" id="main-bg"></div>
+    <div class="main-menu-container fade-in">
+      <h2>منوی اصلی</h2>
+      <button class="btn menu-btn" onclick="showReadingMenu()">روان‌خوانی</button>
+      <button class="btn menu-btn" onclick="showAddSentenceMenu()">وارد کردن جمله جدید</button>
+      <button class="btn menu-btn" onclick="logout()">خروج از سیستم</button>
+    </div>
   </div>
 
   <!-- منوی روان‌خوانی -->
-  <div id="reading-menu" style="display: none;">
-    <h2>روان‌خوانی</h2>
-    <div id="sentence-box">
-      <p id="sentence"></p>
+  <div id="reading-menu">
+    <div class="floating-bg" id="reading-bg"></div>
+    <div class="reading-container fade-in">
+      <h2>روان‌خوانی</h2>
+      <div id="sentence-box">
+        <div id="sentence-container">
+          <span id="leading-emoji" class="emoji">🚀</span>
+          <p id="sentence"></p>
+          <span id="trailing-emoji" class="emoji">🏃‍♂️</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn control-btn" onclick="startReading()">شروع</button>
+        <button class="btn control-btn" onclick="stopReading()">توقف</button>
+        <button class="btn control-btn" onclick="nextSentence()">جمله بعدی</button>
+        <button class="btn control-btn" onclick="backToMainMenu()">بازگشت به منو</button>
+      </div>
+      <div id="speed-control">
+        <label for="speed">سرعت حرکت جمله (کوچکتر = آهسته‌تر):</label>
+        <input type="range" id="speed" min="0.2" max="5" step="0.1" value="0.8" onchange="updateSpeed()">
+      </div>
     </div>
-    <button onclick="startReading()">شروع</button>
-    <button onclick="stopReading()">توقف</button>
-    <button onclick="nextSentence()">جمله بعدی</button>
-    <div id="speed-control">
-      <label for="speed">سرعت حرکت جمله:</label>
-      <input type="range" id="speed" min="1" max="10" value="2" onchange="updateSpeed()">
-    </div>
-    <button onclick="backToMainMenu()">بازگشت به منو</button>
   </div>
 
   <!-- منوی وارد کردن جمله جدید -->
-  <div id="add-sentence-menu" style="display: none;">
-    <h2>وارد کردن جمله جدید</h2>
-    <input type="text" id="new-sentence" placeholder="جمله جدید را وارد کنید">
-    <button onclick="addSentence()">اضافه کردن جمله</button>
-    <button onclick="backToMainMenu()">بازگشت به منو</button>
+  <div id="add-sentence-menu">
+    <div class="floating-bg" id="add-sentence-bg"></div>
+    <div class="add-sentence-container fade-in">
+      <h2>وارد کردن جمله جدید</h2>
+      <input type="text" id="new-sentence" placeholder="جمله جدید را وارد کنید">
+      <button class="btn" onclick="addSentence()">اضافه کردن جمله</button>
+      <button class="btn" onclick="backToMainMenu()">بازگشت به منو</button>
+    </div>
   </div>
 
-  <script src="script.js"></script>
-</body>
-</html>
-<!-- partial -->
-  <script  src="./script.js"></script>
+  <script>
+    // لیست جملات (تمام جملات شما)
+    const sentences = [
+      "من یک توپ آبی دارم.",
+      "او به مدرسه رفت.",
+      "ما در کلاس درس خواندیم.",
+      "تو یک مداد زرد داری.",
+      "آن گربه روی دیوار نشست.",
+      "این گل قرمز است.",
+      "من یک سیب شیرین خوردم.",
+      "او روی صندلی نشست.",
+      "ما به پارک رفتیم.",
+      "تو یک نقاشی کشیدی.",
+      "آن ماشین سریع حرکت می‌کند.",
+      "این خانه بزرگ و قشنگ است.",
+      "من به مادرم کمک کردم.",
+      "او یک هدیه دریافت کرد.",
+      "ما در حیاط بازی کردیم.",
+      "تو یک بستنی خوردی.",
+      "آن درخت سبز و بلند است.",
+      "این کتاب جالب و زیبا است.",
+      "من یک دوست مهربان دارم.",
+      "او به مدرسه رفت.",
+      "ما با هم غذا خوردیم.",
+      "تو یک شعر خواندی.",
+      "آن گربه روی دیوار نشست.",
+      "این عکس قشنگ و زیبا است.",
+      "من یک توپ جدید خریدم.",
+      "او به من لبخند زد.",
+      "ما به کتابخانه رفتیم.",
+      "تو یک داستان تعریف کردی.",
+      "آن ماهی در آب شنا می‌کند.",
+      "این کیک خوشمزه و شیرین است.",
+      "من یک نقاشی کشیدم.",
+      "او با برادرش بازی کرد.",
+      "ما به سینما رفتیم.",
+      "تو یک گل چیدی.",
+      "آن ابر در آسمان است.",
+      "این مداد نو و تیز است.",
+      "من یک بادبادک دارم.",
+      "او به من کمک کرد.",
+      "ما در کلاس نقاشی کشیدیم.",
+      "تو یک ماشین اسباب‌بازی داری.",
+      "آن سگ کوچک و بامزه است.",
+      "این میز تمیز و مرتب است.",
+      "من یک دفتر جدید خریدم.",
+      "او یک کتاب خواند.",
+      "ما به باغ وحش رفتیم.",
+      "تو یک کاردستی درست کردی.",
+      "آن پروانه روی گل نشست.",
+      "این نان تازه و گرم است.",
+      "من یک عروسک دارم.",
+      "او به من یک هدیه داد.",
+      "ما در حیاط دویدیم.",
+      "تو یک سیب خوردی.",
+      "آن ستاره در آسمان است.",
+      "این صندلی راحت و نرم است.",
+      "من یک دوچرخه دارم.",
+      "او با من بازی کرد.",
+      "ما به فروشگاه رفتیم.",
+      "تو یک نقاشی زیبا کشیدی.",
+      "آن پرنده در آسمان پرواز می‌کند.",
+      "این آب خنک و گوارا است.",
+      "من یک مداد رنگی دارم.",
+      "او به من یک کتاب داد.",
+      "ما در کلاس شعر خواندیم.",
+      "تو یک گل قرمز چیدی.",
+      "آن خورشید در آسمان است.",
+      "این میز چوبی و محکم است.",
+      "من یک توپ قرمز دارم.",
+      "او با دوستش دوید.",
+      "ما به مدرسه رفتیم.",
+      "تو یک داستان شنیدی.",
+      "آن گربه سفید و زیبا است.",
+      "این کتاب قدیمی و جالب است.",
+      "من یک مداد نو دارم.",
+      "او به من یک سیب داد.",
+      "ما در حیاط بازی کردیم.",
+      "تو یک نقاشی کشیدی.",
+      "آن درخت بلند و سبز است.",
+      "این نان گرم و تازه است.",
+      "من یک عروسک زیبا دارم.",
+      "او به من کمک کرد.",
+      "ما به پارک رفتیم.",
+      "تو یک بادبادک داری.",
+      "آن ابر سفید و پف‌کرده است.",
+      "این مداد تیز و نو است.",
+      "من یک کتاب جدید خریدم.",
+      "او با من دوید.",
+      "ما در کلاس نقاشی کردیم.",
+      "تو یک گل زرد چیدی.",
+      "آن ماهی کوچک و زیبا است.",
+      "این کیک شیرین و خوشمزه است.",
+      "من یک دوچرخه قرمز دارم.",
+      "او به من یک هدیه داد.",
+      "ما به باغ وحش رفتیم.",
+      "تو یک کاردستی درست کردی.",
+      "آن پروانه زیبا و رنگارنگ است.",
+      "این نان تازه و گرم است.",
+      "من یک عروسک کوچک دارم.",
+      "او با برادرش بازی کرد.",
+      "من یک کتاب دارم.",
+      "او با دوستش بازی می‌کند.",
+      "ما به پارک می‌رویم.",
+      "تو یک مداد قرمز داری.",
+      "آن پرنده آواز می‌خواند.",
+      "این گل زیبا است.",
+      "من یک سیب شیرین خوردم.",
+      "او روی صندلی نشست.",
+      "ما در کلاس درس می‌خوانیم.",
+      "تو یک نقاشی زیبا کشیدی.",
+      "آن ماشین سریع حرکت می‌کند.",
+      "این خانه بزرگ است.",
+      "من به مادرم کمک کردم.",
+      "او یک هدیه دریافت کرد.",
+      "ما در حیاط بازی کردیم.",
+      "تو یک بستنی خوردی.",
+      "آن درخت سبز است.",
+      "این کتاب جالب است.",
+      "من یک دوست مهربان دارم.",
+      "او به مدرسه رفت.",
+      "ما با هم غذا خوردیم.",
+      "تو یک شعر خواندی.",
+      "آن گربه روی دیوار نشست.",
+      "این عکس قشنگ است.",
+      "من یک توپ جدید خریدم.",
+      "او به من لبخند زد.",
+      "ما به کتابخانه رفتیم.",
+      "تو یک داستان تعریف کردی.",
+      "آن ماهی در آب شنا می‌کند.",
+      "این کیک خوشمزه است.",
+      "من یک نقاشی کشیدم.",
+      "او با برادرش بازی کرد.",
+      "ما به سینما رفتیم.",
+      "تو یک گل چیدی.",
+      "آن ابر در آسمان است.",
+      "این مداد نو است.",
+      "من یک بادبادک دارم.",
+      "او به من کمک کرد.",
+      "ما در کلاس نقاشی کشیدیم.",
+      "تو یک ماشین اسباب‌بازی داری.",
+      "آن سگ کوچک است.",
+      "این میز تمیز است.",
+      "من یک دفتر جدید خریدم.",
+      "او یک کتاب خواند.",
+      "ما به باغ وحش رفتیم.",
+      "تو یک کاردستی درست کردی.",
+      "آن پروانه روی گل نشست.",
+      "این نان تازه است.",
+      "من یک عروسک دارم.",
+      "او به من یک هدیه داد.",
+      "ما در حیاط دویدیم.",
+      "تو یک سیب خوردی.",
+      "آن ستاره در آسمان است.",
+      "این صندلی راحت است.",
+      "من یک دوچرخه دارم.",
+      "او با من بازی کرد.",
+      "ما به فروشگاه رفتیم.",
+      "تو یک نقاشی زیبا کشیدی.",
+      "آن پرنده در آسمان پرواز می‌کند.",
+      "این آب خنک است.",
+      "من یک مداد رنگی دارم.",
+      "او به من یک کتاب داد.",
+      "ما در کلاس شعر خواندیم.",
+      "تو یک گل قرمز چیدی.",
+      "آن خورشید در آسمان است.",
+      "این میز چوبی است.",
+      "من یک توپ قرمز دارم.",
+      "او با دوستش دوید.",
+      "ما به مدرسه رفتیم.",
+      "تو یک داستان شنیدی.",
+      "آن گربه سفید است.",
+      "این کتاب قدیمی است.",
+      "من یک مداد نو دارم.",
+      "او به من یک سیب داد.",
+      "ما در حیاط بازی کردیم.",
+      "تو یک نقاشی کشیدی.",
+      "آن درخت بلند است.",
+      "این نان گرم است.",
+      "من یک عروسک زیبا دارم.",
+      "او به من کمک کرد.",
+      "ما به پارک رفتیم.",
+      "تو یک بادبادک داری.",
+      "آن ابر سفید است.",
+      "این مداد تیز است.",
+      "من یک کتاب جدید خریدم.",
+      "او با من دوید.",
+      "ما در کلاس نقاشی کردیم.",
+      "تو یک گل زرد چیدی.",
+      "آن ماهی کوچک است.",
+      "این کیک شیرین است.",
+      "من یک دوچرخه قرمز دارم.",
+      "او به من یک هدیه داد.",
+      "ما به باغ وحش رفتیم.",
+      "تو یک کاردستی درست کردی.",
+      "آن پروانه زیبا است.",
+      "این نان تازه و گرم است.",
+      "من یک عروسک کوچک دارم.",
+      "او با برادرش بازی کرد.",
+      "ما به سینما رفتیم.",
+      "تو یک داستان تعریف کردی.",
+      "من می‌خوانم.",
+      "او می‌خورد.",
+      "ما بازی می‌کنیم.",
+      "تو می‌نویسی.",
+      "آن قرمز است.",
+      "این بزرگ است.",
+      "من دوست دارم.",
+      "او می‌خندد.",
+      "ما می‌پریم.",
+      "تو می‌خوابی.",
+      "آن کوچک است.",
+      "این زیبا است.",
+      "من می‌بینم.",
+      "او می‌دود.",
+      "ما می‌نشینیم.",
+      "تو می‌ایستی.",
+      "آن سبز است.",
+      "این سرد است.",
+      "من می‌گویم.",
+      "او می‌شنود.",
+      "ما می‌خندیم.",
+      "تو می‌گریی.",
+      "آن آبی است.",
+      "این گرم است.",
+      "من می‌دانم.",
+      "او می‌فهمد.",
+      "ما می‌سازیم.",
+      "تو می‌بری.",
+      "آن زرد است.",
+      "این تند است.",
+      "من می‌خواهم.",
+      "او می‌دهد.",
+      "ما می‌گیریم.",
+      "تو می‌روی.",
+      "آن سفید است.",
+      "این کند است.",
+      "من می‌بینم.",
+      "او می‌نویسد.",
+      "ما می‌خوانیم.",
+      "تو می‌خوری.",
+      "آن سیاه است.",
+      "این بلند است.",
+      "من می‌گویم.",
+      "او می‌شنود.",
+      "ما می‌خندیم.",
+      "تو می‌گریی.",
+      "آن قهوه‌ای است.",
+      "این کوتاه است.",
+      "من می‌دانم.",
+      "او می‌فهمد.",
+      "ما می‌سازیم.",
+      "تو می‌بری.",
+      "آن بنفش است.",
+      "این نرم است.",
+      "من می‌خواهم.",
+      "او می‌دهد.",
+      "ما می‌گیریم.",
+      "تو می‌روی.",
+      "آن نارنجی است.",
+      "این سخت است.",
+      "من می‌بینم.",
+      "او می‌نویسد.",
+      "ما می‌خوانیم.",
+      "تو می‌خوری.",
+      "آن خاکستری است.",
+      "این خنک است.",
+      "من می‌گویم.",
+      "او می‌شنود.",
+      "ما می‌خندیم.",
+      "تو می‌گریی.",
+      "آن صورتی است.",
+      "این تیز است.",
+      "من می‌دانم.",
+      "او می‌فهمد.",
+      "ما می‌سازیم.",
+      "تو می‌بری.",
+      "آن طلایی است.",
+      "این خیس است.",
+      "من می‌خواهم.",
+      "او می‌دهد.",
+      "ما می‌گیریم.",
+      "تو می‌روی.",
+      "آن نقره‌ای است.",
+      "این خشک است.",
+      "من می‌بینم.",
+      "او می‌نویسد.",
+      "ما می‌خوانیم.",
+      "تو می‌خوری.",
+      "آن روشن است.",
+      "این تاریک است.",
+      "من می‌گویم.",
+      "او می‌شنود.",
+      "ما می‌خندیم.",
+      "تو می‌گریی.",
+      "آن خوش‌بو است.",
+      "این بدبو است.",
+      "من می‌دانم.",
+      "او می‌فهمد.",
+      "ما می‌سازیم.",
+      "تو می‌بری."
+    ];
 
+    let currentSentenceIndex = 0;
+  let animationInterval;
+  let speed = 0.8; // سرعت پیش‌فرض (کوچکتر = آهسته‌تر)
+
+    // ایموجی‌های مختلف برای جلوه بصری
+    const leadingEmojis = ["🚀", "🐇", "⚡", "🏎️", "🦅", "🌠", "💫", "🌟", "✨", "🔥"];
+    const trailingEmojis = ["🏃‍♂️", "🐢", "🚶‍♂️", "🦖", "🐌", "🚴‍♂️", "🦥", "🐘", "🦒", "🐢"];
+
+    // فایل‌های افکت صوتی که به صورت رندم پخش می‌شوند
+    const effectFiles = [
+      'sounds/sund1.mp3',
+      'sounds/sund2.mp3',
+      'sounds/aram.mp3',
+      'sounds/paszamin.mp3'
+    ];
+
+    // آرایه برای نگهداری مرجع Audioهای در حال پخش تا در صورت نیاز بتوانیم آن‌ها را متوقف کنیم
+    let currentEffectAudios = [];
+
+    // پخش دو افکت به صورت متوالی: ابتدا فایل اول، سپس پس از اتمام آن فایل دوم
+    function playRandomTwoEffects() {
+      if (!effectFiles || effectFiles.length === 0) return;
+
+      // انتخاب دو فایل رندم (سعی می‌کنیم در صورت امکان دو فایل متفاوت انتخاب کنیم)
+      const firstIndex = Math.floor(Math.random() * effectFiles.length);
+      let secondIndex = Math.floor(Math.random() * effectFiles.length);
+      if (effectFiles.length > 1) {
+        // تلاش برای انتخاب فایل دوم متفاوت از اول (حداکثر چند بار)
+        let attempts = 0;
+        while (secondIndex === firstIndex && attempts < 5) {
+          secondIndex = Math.floor(Math.random() * effectFiles.length);
+          attempts++;
+        }
+      }
+
+      const firstFile = effectFiles[firstIndex];
+      const secondFile = effectFiles[secondIndex];
+
+      try {
+        // در صورت وجود افکت‌های قبلی، آن‌ها را متوقف کن
+        if (currentEffectAudios && currentEffectAudios.length) {
+          currentEffectAudios.forEach(a => { try { a.pause(); a.currentTime = 0; } catch (e) {} });
+          currentEffectAudios = [];
+        }
+
+        const a1 = new Audio(firstFile);
+        const a2 = new Audio(secondFile);
+
+        // نگهداری مراجع برای امکان توقف در آینده
+        currentEffectAudios = [a1, a2];
+
+        // نادیده گرفتن خطاهای پخش (مثلاً تنظیمات auto-play)
+        a1.play().catch(() => {});
+        a1.onended = () => {
+          a2.play().catch(() => {});
+        };
+
+        // پاکسازی مراجع هنگام اتمام دومین صدا
+        a2.onended = () => {
+          currentEffectAudios = [];
+        };
+      } catch (e) {
+        // در صورتی که ساختن Audio شکست خورد، نادیده بگیر
+        console.warn('Error playing effects', e);
+      }
+    }
+
+    // تابع ایجاد افکت‌های شناور در پس‌زمینه
+    function createFloatingBackground(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      // پاک کردن المان‌های قبلی
+      container.innerHTML = '';
+      
+      // ایجاد المان‌های شناور
+      for (let i = 0; i < 15; i++) {
+        const item = document.createElement('div');
+        item.classList.add('floating-item');
+        
+        // اندازه تصادفی
+        const size = Math.random() * 60 + 20;
+        item.style.width = `${size}px`;
+        item.style.height = `${size}px`;
+        
+        // موقعیت تصادفی
+        item.style.left = `${Math.random() * 100}%`;
+        item.style.top = `${Math.random() * 100}%`;
+        
+        // تاخیر و مدت زمان تصادفی برای انیمیشن
+        item.style.animationDelay = `${Math.random() * 15}s`;
+        item.style.animationDuration = `${15 + Math.random() * 20}s`;
+        
+        container.appendChild(item);
+      }
+    }
+
+    // تابع پخش صدای کلیک ساده
+    function playClickSound() {
+      const clickSound = document.getElementById('click-sound');
+      clickSound.currentTime = 0; // بازنشانی صدا به ابتدا
+      clickSound.play(); // پخش صدا
+    }
+
+    // تابع پخش صدای کلیک دکمه
+    function playButtonClickSound() {
+      const buttonClickSound = document.getElementById('button-click-sound');
+      buttonClickSound.currentTime = 0; // بازنشانی صدا به ابتدا
+      buttonClickSound.play(); // پخش صدا
+    }
+
+    // اضافه کردن صدا به دکمه‌ها
+    document.addEventListener('DOMContentLoaded', function() {
+      // ایجاد افکت‌های پس‌زمینه برای هر صفحه
+      createFloatingBackground('login-bg');
+      createFloatingBackground('main-bg');
+      createFloatingBackground('reading-bg');
+      createFloatingBackground('add-sentence-bg');
+      
+      // اضافه کردن صدا به دکمه‌ها
+      document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function() {
+          if (this.classList.contains('control-btn')) {
+            playButtonClickSound();
+          } else {
+            playClickSound();
+          }
+        });
+      });
+    });
+
+    // تابع ورود به سیستم و پخش موزیک پس‌زمینه
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username === 'abbas' && password === '1335') {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-menu').style.display = 'flex';
+
+        // پخش موزیک پس‌زمینه پس از ورود
+        const backgroundMusic = document.getElementById('background-music');
+        backgroundMusic.play();
+      } else {
+        document.getElementById('error-message').style.display = 'block';
+      }
+    }
+
+    // تابع نمایش منوی روان‌خوانی
+    function showReadingMenu() {
+      document.getElementById('main-menu').style.display = 'none';
+      document.getElementById('reading-menu').style.display = 'flex';
+      
+      // انتخاب ایموجی‌های تصادفی
+      const randomLeadingIndex = Math.floor(Math.random() * leadingEmojis.length);
+      const randomTrailingIndex = Math.floor(Math.random() * trailingEmojis.length);
+      
+      document.getElementById('leading-emoji').textContent = leadingEmojis[randomLeadingIndex];
+      document.getElementById('trailing-emoji').textContent = trailingEmojis[randomTrailingIndex];
+    }
+
+    // تابع نمایش منوی وارد کردن جمله جدید
+    function showAddSentenceMenu() {
+      document.getElementById('main-menu').style.display = 'none';
+      document.getElementById('add-sentence-menu').style.display = 'flex';
+    }
+
+    // تابع بازگشت به منوی اصلی
+    function backToMainMenu() {
+      document.getElementById('reading-menu').style.display = 'none';
+      document.getElementById('add-sentence-menu').style.display = 'none';
+      document.getElementById('main-menu').style.display = 'flex';
+
+      // توقف موزیک روان‌خوانی و پخش موزیک پس‌زمینه
+      const calmMusic = document.getElementById('calm-music');
+      calmMusic.pause();
+      calmMusic.currentTime = 0;
+
+      const backgroundMusic = document.getElementById('background-music');
+      backgroundMusic.play();
+    }
+
+    // تابع خروج از سیستم
+    function logout() {
+      document.getElementById('main-menu').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('error-message').style.display = 'none';
+
+      // توقف موزیک پس‌زمینه
+      const backgroundMusic = document.getElementById('background-music');
+      backgroundMusic.pause();
+      backgroundMusic.currentTime = 0;
+    }
+
+    // تابع شروع روان‌خوانی
+    function startReading() {
+      // توقف موزیک پس‌زمینه و پخش موزیک آرام
+      const backgroundMusic = document.getElementById('background-music');
+      backgroundMusic.pause();
+
+      const calmMusic = document.getElementById('calm-music');
+      calmMusic.play();
+
+      // نمایش جمله فعلی
+      displaySentence();
+
+      // شروع انیمیشن حرکت جمله
+      startAnimation();
+    }
+
+    // تابع توقف روان‌خوانی
+    function stopReading() {
+      // توقف انیمیشن
+      clearInterval(animationInterval);
+
+      // توقف موزیک آرام
+      try {
+        const calmMusic = document.getElementById('calm-music');
+        if (calmMusic) { calmMusic.pause(); calmMusic.currentTime = 0; }
+      } catch (e) {}
+
+      // توقف هر افکت صوتی که هنوز در حال پخش است
+      try {
+        if (currentEffectAudios && currentEffectAudios.length) {
+          currentEffectAudios.forEach(a => { try { a.pause(); a.currentTime = 0; } catch (e) {} });
+          currentEffectAudios = [];
+        }
+      } catch (e) {}
+
+      // پخش موزیک پس‌زمینه پس از توقف
+      try {
+        const backgroundMusic = document.getElementById('background-music');
+        if (backgroundMusic) backgroundMusic.play();
+      } catch (e) {}
+    }
+
+    // تابع نمایش جمله فعلی
+    function displaySentence() {
+      const sentenceElement = document.getElementById('sentence');
+      sentenceElement.textContent = sentences[currentSentenceIndex];
+      sentenceElement.style.left = '100%'; // شروع از سمت راست
+    }
+
+    // تابع شروع انیمیشن حرکت جمله
+    function startAnimation() {
+      const sentenceElement = document.getElementById('sentence');
+      let position = 100; // شروع از سمت راست
+
+      // پاک کردن انیمیشن قبلی
+      clearInterval(animationInterval);
+
+  // قرار دادن جمله در نقطه شروع
+  sentenceElement.style.left = `${position}%`;
+
+  // قطع کردن موزیک‌های پس‌زمینه قبل از پخش افکت‌ها
+  try {
+    const calmMusic = document.getElementById('calm-music');
+    if (calmMusic && !calmMusic.paused) { calmMusic.pause(); }
+  } catch (e) {}
+  try {
+    const backgroundMusic = document.getElementById('background-music');
+    if (backgroundMusic && !backgroundMusic.paused) { backgroundMusic.pause(); }
+  } catch (e) {}
+
+  // پخش دو افکت صوتی رندم هنگام شروع حرکت جمله
+  playRandomTwoEffects();
+
+      // تنظیم انیمیشن جدید
+      animationInterval = setInterval(() => {
+        // حرکت به سمت چپ با سرعت تنظیم شده. از ضریب کوچکتر استفاده می‌کنیم
+        // تا عددهای کوچکتر روی اسلایدر سرعت کمتری ایجاد کنند.
+        position -= (speed * 0.5);
+        sentenceElement.style.left = `${position}%`;
+
+        // اگر جمله از صفحه خارج شد، همان جمله را دوباره از ابتدا پخش کن
+        if (position < -100) {
+          position = 100;
+          sentenceElement.style.left = `${position}%`;
+        }
+      }, 20);
+    }
+
+    // تابع نمایش جمله بعدی
+    function nextSentence() {
+      // جلو بردن به جمله بعدی طبق انتخاب کاربر
+      currentSentenceIndex = (currentSentenceIndex + 1) % sentences.length;
+      displaySentence();
+
+      // تغییر ایموجی‌ها برای جمله جدید
+      const randomLeadingIndex = Math.floor(Math.random() * leadingEmojis.length);
+      const randomTrailingIndex = Math.floor(Math.random() * trailingEmojis.length);
+
+      document.getElementById('leading-emoji').textContent = leadingEmojis[randomLeadingIndex];
+      document.getElementById('trailing-emoji').textContent = trailingEmojis[randomTrailingIndex];
+
+      // ری‌استارت انیمیشن برای جمله جدید
+      startAnimation();
+    }
+
+    // تابع به‌روزرسانی سرعت
+    function updateSpeed() {
+      speed = parseFloat(document.getElementById('speed').value);
+    }
+
+    // تابع اضافه کردن جمله جدید
+    function addSentence() {
+      const newSentence = document.getElementById('new-sentence').value.trim();
+      
+      if (newSentence) {
+        sentences.push(newSentence);
+        document.getElementById('new-sentence').value = '';
+        alert('جمله جدید با موفقیت اضافه شد!');
+      } else {
+        alert('لطفاً یک جمله وارد کنید.');
+      }
+    }
+  </script>
 </body>
 </html>
